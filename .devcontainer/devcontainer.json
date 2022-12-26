@@ -1,0 +1,10 @@
+{
+  "name": "anomaly_detection_with_torch",
+  "forwardPorts": [8888],
+  "dockerFile": "../Dockerfile",
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python"]
+    }
+  }
+}

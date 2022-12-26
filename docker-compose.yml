@@ -1,0 +1,16 @@
+version: "3"
+services:
+  anormaly_detect:
+    build:
+      context: .
+      shm_size: "2gb"
+    tty: true
+    ports:
+      - "8080:8888"
+    command: jupyter-lab --ip 0.0.0.0 --allow-root -b localhost --NotebookApp.token=''
+    volumes:
+      - ./main.py:/work/main.py
+      - ./src:/work/src
+      - ./weights:/work/weights
+      - ./Dataset:/work/Dataset
+      - ./evals:/work/evals

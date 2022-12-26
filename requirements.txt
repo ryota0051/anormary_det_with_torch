@@ -1,0 +1,9 @@
+torchvision==0.13.1
+pandas==1.5.2
+jupyterlab==3.5.2
+ipywidgets==8.0.4
+Pillow==9.3.0
+flake8==6.0.0
+scikit-learn==1.2.0
+tqdm==4.64.1
+matplotlib==3.6.2

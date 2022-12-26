@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "anomaly_detection_with_torch",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "internalConsole"
+    }
+  ]
+}
