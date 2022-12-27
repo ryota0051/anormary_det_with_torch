@@ -5,15 +5,24 @@ from sklearn.metrics import roc_auc_score
 from torch.nn.functional import softmax
 
 from src.labels import DATA_LABEL_DICT
+from src.model.pytorchtools import EarlyStopping
 
 
 class Trainer:
-    def __init__(self, epochs: int, optimizer, loss_fn, model, positive_label=DATA_LABEL_DICT['good']):
+    def __init__(
+            self,
+            epochs: int,
+            optimizer,
+            loss_fn,
+            model,
+            positive_label=DATA_LABEL_DICT['good'],
+            early_stopping: EarlyStopping = None):
         self.epochs = epochs
         self.optimizer = optimizer
         self.loss_fn = loss_fn
         self.model = model
         self.positive_label = positive_label
+        self.early_stopping = early_stopping
 
     def train(self, train_dl, valid_dl):
         history = {
@@ -25,12 +34,16 @@ class Trainer:
         for epoch in range(self.epochs):
             loss, auc_score = self.train_one_step(train_dl)
             val_loss, val_auc_score = self.valid_one_step(valid_dl)
+            if self.early_stopping:
+                self.early_stopping(val_loss, self.model)
+                if self.early_stopping.early_stop:
+                    break
             history['loss'].append(loss)
             history['auc'].append(auc_score)
             history['val_loss'].append(val_loss)
             history['val_auc'].append(val_auc_score)
             print(
-                f'Epoch {epoch + 1} loss: {loss:.4f}, val_loss: {val_loss:.4f}, auc: {auc_score:.4f}, val_auc: {val_auc_score:.4f}'
+                f'Epoch {epoch + 1} / {self.epochs} loss: {loss:.4f}, val_loss: {val_loss:.4f}, auc: {auc_score:.4f}, val_auc: {val_auc_score:.4f}'
             )
         return history
 
