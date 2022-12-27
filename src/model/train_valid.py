@@ -9,6 +9,15 @@ from src.model.pytorchtools import EarlyStopping
 
 
 class Trainer:
+    """学習に使用するクラス
+    Args:
+        epochs: 学習epoch数
+        optimizer: 最適化手法インスタンス
+        loss_fn: 損失関数
+        model: 学習対象モデル
+        positive_label: ポジティブのインデックス
+        early_stopping: 学習早期打ち切りインスタンス
+    """
     def __init__(
             self,
             epochs: int,
@@ -25,6 +34,19 @@ class Trainer:
         self.early_stopping = early_stopping
 
     def train(self, train_dl, valid_dl):
+        """学習、評価
+        Args:
+            train_dl: 学習データローダ
+            valid_dl: 検証用データローダ
+
+        Returns:
+            epochごとの
+            - 学習データのloss
+            - 学習データのauc
+            - 検証データのloss
+            - 検証データのauc
+            を格納した辞書
+        """
         history = {
             'loss': [],
             'auc': [],
@@ -48,6 +70,13 @@ class Trainer:
         return history
 
     def train_one_step(self, train_dl):
+        """1epochの学習を実施
+        Args:
+            train_dl: 学習用データローダ
+
+        Returns:
+            (loss, auc)
+        """
         self.model.train()
         result_loss = 0
         y_test, y_pred = [], []
@@ -69,6 +98,13 @@ class Trainer:
         return result_loss, result_auc
 
     def valid_one_step(self, valid_dl):
+        """検証データの評価
+        Args:
+            valid_dl: 検証用データローダ
+
+        Returns:
+            (valid_loss, valid_auc)
+        """
         self.model.eval()
         result_loss = 0
         y_test, y_pred = [], []

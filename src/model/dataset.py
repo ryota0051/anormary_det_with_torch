@@ -18,6 +18,14 @@ default_trans = transforms.Compose([
 
 
 class GoodBadImgDataset(Dataset):
+    """データセット作成用クラス
+    Args:
+        img_path_list: 画像パスリスト
+        label_list: ラベルリスト
+        transform: 画像に対する前処理
+        to_onehot: ラベルに対するone-hotエンコーディングを実施するか
+        n_labels: ラベル数
+    """
     def __init__(
             self,
             img_path_list: np.ndarray,
@@ -45,6 +53,18 @@ class GoodBadImgDataset(Dataset):
 
 
 class BasicTrainImgTransform:
+    """学習時のデータ変換クラス
+    Args:
+        resize: リサイズ後の画像サイズ
+        degrees: 画像回転角度
+
+    Notes:
+        データ拡張として、
+        - 左右反転
+        - 上下反転
+        - 回転
+        を実施している。
+    """
     def __init__(self, resize=(256, 256), degrees=180):
         self.transform = transforms.Compose([
             transforms.Resize(resize),
@@ -52,6 +72,7 @@ class BasicTrainImgTransform:
             transforms.RandomHorizontalFlip(),
             # 上下反転
             transforms.RandomVerticalFlip(),
+            # 回転
             transforms.RandomRotation(degrees=degrees),
             transforms.ToTensor(),
             transforms.Normalize(
@@ -65,6 +86,10 @@ class BasicTrainImgTransform:
 
 
 class BasicValidTestImgTransform:
+    """検証, テストデータ変換クラス
+    Args:
+        resize: リサイズ後の画像サイズ
+    """
     def __init__(self, resize=(256, 256)):
         self.transform = transforms.Compose([
             transforms.Resize(resize),
