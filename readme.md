@@ -1,14 +1,29 @@
 ## 動作の前提条件
 
-Docker desktop がインストールされており、動作するのが確認できていること
-インストールしていない場合は以下のリンクからダウンロード
-https://www.docker.com/products/docker-desktop/
+- Docker がインストールされており、動作するのが確認できていること
+
+- Dataset ディレクトリ配下が以下の構成となっていること
+
+  ```
+  ./Dataset
+  |-good
+  | |_良品画像一覧
+  |_bad
+    |-bent
+    |  |_bent画像一覧
+    |-color
+    |  |_color画像一覧
+    |-flip
+    |  |_flip画像一覧
+    |_scratch
+       |_scratch画像一覧
+  ```
 
 ## 環境構築
 
-1. 先端課題 018_020 のディレクトリに移動
-2. docker-compose up -d
-3. アドレスバーに「localhost:8888」を打ち込む
+1. 本リポジトリを clone して、ディレクトリに移動
+2. `ocker compose run --rm anormaly_detect bash`を実行
+3. `python main.py`を実行
 
 ## model の説明
 
@@ -16,17 +31,22 @@ https://www.docker.com/products/docker-desktop/
 不良品でも種類はありますが、今回のモデルはどの種類の不良品であるかまでは判定しません
 あくまでも、良品 or 不良品を判定するモデルです。
 
-## フォルダ構成
+## 評価方法
 
-.先端課題 018_020
-├code
-| ├model.py モデル構成ファイル
-| ├model_weight.pth 学習済みの重み
-| └example_code.ipynb チュートリアルのコード
-└Dataset
-├bad
-| ├bent
-| ├color
-| ├flip
-| └scratch
-└good
+以下の 2 つの評価指標を使用
+
+    - 混同行列
+
+    - rocのaucスコア
+
+## 工夫点
+
+- 学習時に、以下の 3 つのデータ拡張実施
+
+  - ランダムで上下反転
+
+  - ランダムで左右反転
+
+  - ランダムで-180 ~ 180 度回転
+
+- モデルを交差検証で学習し、最終的な結果をそれぞれの検証パートでの推論結果の平均値として評価を実施
