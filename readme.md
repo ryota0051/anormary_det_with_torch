@@ -24,6 +24,7 @@
 1. 本リポジトリを clone して、ディレクトリに移動
 2. `ocker compose run --rm anormaly_detect bash`を実行
 3. `python main.py`を実行
+4. `./evals/trained_model_eval`配下に各 fold の結果と全 fold の予測値を平均した値結果が格納される(model の重みは、`./weights/trained_weights/fold_N`(N は fold 数)ディレクトリ配下の weight.pth に保存される。)
 
 ## model の説明
 
